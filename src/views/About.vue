@@ -3,9 +3,9 @@
 
     <a-table :columns="columns" :data-source="data">
       <a slot="name" slot-scope="text">
-        <a-input @focus="toFocus" :value="text"></a-input>
+        <a-input @focus.prevent="toFocus" @blur="toBlur" :value="text"></a-input>
         <a-input @focus="showModal" :value="'parentModal'"></a-input>
-        <span @click="toFocus">{{text}}</span>
+        <span @click="toFocus" >{{text}}</span>
 
       </a>
       <span slot="customTitle"><a-icon type="smile-o"/> Name</span>
@@ -28,6 +28,7 @@
     </a-table>
 
     <my-modal @closeChild="parentToCloseChild" :child-visible="childVisible"></my-modal>
+    <a-input ref="toFocus1" @focus.prevent="tmpFocus"></a-input>
     <div>
       <a-button type="primary" @click="showModal">
         Open Modal with customized footer
@@ -139,11 +140,21 @@ export default {
     },
     toFocus() {
       console.log("toFocus")
+      //提交将焦点从本组件移开
+      this.$refs.toFocus1.focus();
       this.childVisible = true;
+
     },
     parentToCloseChild() {
       console.log(" 我是父级cancel ");
       this.childVisible = false;
+      this.$refs.toFocus1.focus();
+    },
+    toBlur(){
+      console.log("我是焦点离开事件")
+    },
+    tmpFocus(){
+      console.log("临时焦点")
     }
   }
 };
